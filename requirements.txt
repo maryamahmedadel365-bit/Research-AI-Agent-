@@ -1,8 +1,0 @@
-python-dotenv
-langgraph
-langchain-openai
-langchain-huggingface
-huggingface_hub
-pymupdf4llm
-notion-client
-pydantic
