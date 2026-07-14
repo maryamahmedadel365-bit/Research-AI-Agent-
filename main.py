@@ -1,9 +1,14 @@
 from contextlib import asynccontextmanager
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath("src"))
+
 from fastapi import FastAPI
 
 from core.db import create_tables, SessionLocal
 from users.controllers import router as users_router
+from papers.controllers import router as papers_router
 from users.repository import seed_users
 
 
@@ -32,6 +37,7 @@ app = FastAPI(
 
 
 app.include_router(users_router)
+app.include_router(papers_router)
 
 
 @app.get("/")
