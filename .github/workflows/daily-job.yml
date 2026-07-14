@@ -1,0 +1,17 @@
+name: Daily Paper Analysis & Push Notification
+
+on:
+  schedule:
+    # Runs at 07:00 AM UTC every day
+    - cron: '0 7 * * *'
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions UI
+
+jobs:
+  run-daily-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Hosted API
+        run: |
+          # Replace API_BASE_URL with your actual hosted URL in GitHub repository secrets
+          curl -X POST "${{ secrets.API_BASE_URL }}/api/papers/daily-job?secret=${{ secrets.CRON_SECRET }}" \
+          -H "Content-Type: application/json"
