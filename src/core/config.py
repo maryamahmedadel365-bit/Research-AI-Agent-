@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = ""
 
     HF_TOKEN: str = ""
-    HF_MODEL: str = "mistralai/Mistral-7B-Instruct-v0.3"
+    HF_MODEL: str = "Qwen/Qwen2.5-72B-Instruct"
 
     NOTION_TOKEN: str = ""
     NOTION_DATABASE_ID: str = ""
