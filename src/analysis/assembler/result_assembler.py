@@ -1,4 +1,4 @@
-from schemas import PaperSummary
+from ..schemas import PaperSummary
 
 
 class ResultAssembler:

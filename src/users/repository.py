@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
 
-from users.models import User
+from .models import User
 
+def get_all_users(db: Session) -> list[User]:
+    return db.query(User).all()
 
 def get_user_by_id(db: Session, user_id: int) -> User | None:
     return db.query(User).filter(User.id == user_id).first()

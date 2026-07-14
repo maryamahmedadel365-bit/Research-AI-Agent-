@@ -1,5 +1,5 @@
-from schemas import PaperSummary
-from state import PipelineState
+from ..schemas import PaperSummary
+from ..state import PipelineState
 
 
 def make_notion_write_node(sink):

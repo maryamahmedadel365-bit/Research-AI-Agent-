@@ -1,6 +1,6 @@
 from notion_client import Client
 
-from schemas import PaperSummary
+from ..schemas import PaperSummary
 
 
 def _rich_text(content: str, limit: int = 2000) -> list:
@@ -24,4 +24,4 @@ class NotionPageWriter:
                 "Summary": {"rich_text": _rich_text(result.summary)},
             },
         )
-        return page["id"]
+        return page["id"]  # type: ignore

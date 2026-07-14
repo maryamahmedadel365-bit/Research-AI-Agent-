@@ -1,4 +1,4 @@
-from state import PipelineState
+from ..state import PipelineState
 
 
 def make_classify_sections_node(classifier):

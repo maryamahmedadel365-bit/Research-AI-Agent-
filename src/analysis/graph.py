@@ -25,28 +25,28 @@ load_dotenv()
 
 from langgraph.graph import END, StateGraph
 
-from assembler.result_assembler import ResultAssembler
-from classifiers.llm_classifier import LlmSectionClassifier
-from config import get_llm
-from converters.pymupdf_converter import PyMuPdfMarkdownConverter
-from extractors.experiments_extractor import ExperimentsExtractor
-from extractors.limitations_extractor import LimitationsExtractor
-from extractors.methods_extractor import MethodsExtractor
-from extractors.summary_extractor import SummaryExtractor
-from extractors.title_extractor import TitleExtractor
-from nodes.node_assemble import make_assemble_node
-from nodes.node_classify_sections import make_classify_sections_node
-from nodes.node_extract_experiments import make_extract_experiments_node
-from nodes.node_extract_limitations import make_extract_limitations_node
-from nodes.node_extract_methods import make_extract_methods_node
-from nodes.node_extract_summary import make_extract_summary_node
-from nodes.node_extract_title import make_extract_title_node
-from nodes.node_notion_write import make_notion_write_node
-from nodes.node_pdf_to_markdown import make_pdf_to_markdown_node
-from nodes.node_split_sections import make_split_sections_node
-from sinks.notion_sink import NotionPageWriter
-from splitters.heading_splitter import HeadingSplitter
-from state import PipelineState, initial_state
+from .assembler.result_assembler import ResultAssembler
+from .classifiers.llm_classifier import LlmSectionClassifier
+from .config import get_llm
+from .converters.pymupdf_converter import PyMuPdfMarkdownConverter
+from .extractors.experiments_extractor import ExperimentsExtractor
+from .extractors.limitations_extractor import LimitationsExtractor
+from .extractors.methods_extractor import MethodsExtractor
+from .extractors.summary_extractor import SummaryExtractor
+from .extractors.title_extractor import TitleExtractor
+from .nodes.node_assemble import make_assemble_node
+from .nodes.node_classify_sections import make_classify_sections_node
+from .nodes.node_extract_experiments import make_extract_experiments_node
+from .nodes.node_extract_limitations import make_extract_limitations_node
+from .nodes.node_extract_methods import make_extract_methods_node
+from .nodes.node_extract_summary import make_extract_summary_node
+from .nodes.node_extract_title import make_extract_title_node
+from .nodes.node_notion_write import make_notion_write_node
+from .nodes.node_pdf_to_markdown import make_pdf_to_markdown_node
+from .nodes.node_split_sections import make_split_sections_node
+from .sinks.notion_sink import NotionPageWriter
+from .splitters.heading_splitter import HeadingSplitter
+from .state import PipelineState, initial_state
 
 
 def _continue_or_stop(state: PipelineState) -> str:
@@ -76,7 +76,7 @@ def _classify_router(state: PipelineState):
 def build_graph():
     llm = get_llm()
 
-    graph = StateGraph(PipelineState)
+    graph = StateGraph(PipelineState)  # type: ignore
 
     graph.add_node("pdf_to_markdown", make_pdf_to_markdown_node(PyMuPdfMarkdownConverter()))
     graph.add_node("split_sections", make_split_sections_node(HeadingSplitter()))

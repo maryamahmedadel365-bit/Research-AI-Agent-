@@ -89,8 +89,8 @@ def analyze_paper(paper: ArxivPaperMeta) -> PaperSummaryResponse:
     and return the full summary response."""
     pdf_path = _download_pdf(paper.pdf_url)
     try:
-        from analysis.graph import build_graph
-        from analysis.state import initial_state
+        from ..analysis.graph import build_graph
+        from ..analysis.state import initial_state
 
         graph = build_graph()
         result = graph.invoke(initial_state(pdf_path))

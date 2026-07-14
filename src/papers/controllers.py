@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from papers.schemas import ArxivPaperMeta, PaperSummaryResponse
-from papers import services
+from .schemas import ArxivPaperMeta, PaperSummaryResponse
+from . import services
 
 
 router = APIRouter(prefix="/api/papers", tags=["Papers"])

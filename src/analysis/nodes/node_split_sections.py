@@ -1,4 +1,4 @@
-from state import PipelineState
+from ..state import PipelineState
 
 
 def make_split_sections_node(splitter):

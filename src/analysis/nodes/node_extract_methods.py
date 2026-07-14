@@ -1,4 +1,4 @@
-from state import PipelineState
+from ..state import PipelineState
 
 
 def make_extract_methods_node(extractor):

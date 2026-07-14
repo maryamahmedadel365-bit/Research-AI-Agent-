@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from core.db import get_db
-from users import repository
-from users.schemas import UserResponse, UserUpdatePushToken
+from ..core.db import get_db
+from . import repository
+from .schemas import UserResponse, UserUpdatePushToken
 
 
 router = APIRouter(prefix="/api/users", tags=["Users"])
