@@ -83,6 +83,48 @@ def fetch_random_paper() -> ArxivPaperMeta:
         raise RuntimeError("No papers found from HuggingFace API")
     return random.choice(papers)
 
+def fetch_paper_by_url(url: str) -> ArxivPaperMeta:
+    """Extract arXiv ID from a URL and fetch its metadata from arXiv API."""
+    import re
+    import xml.etree.ElementTree as ET
+    
+    # Try to extract arXiv ID (e.g., from https://arxiv.org/abs/2310.12345 or https://arxiv.org/pdf/2310.12345.pdf)
+    match = re.search(r'(\d{4}\.\d{4,5}(?:v\d+)?)', url)
+    if not match:
+        raise ValueError(f"Could not extract a valid arXiv ID from URL: {url}")
+        
+    arxiv_id = match.group(1)
+    api_url = f"http://export.arxiv.org/api/query?id_list={arxiv_id}"
+    
+    req = urllib.request.Request(api_url, headers={"User-Agent": "Research-AI-Agent"})
+    with urllib.request.urlopen(req, timeout=30) as response:
+        xml_data = response.read()
+        
+    root = ET.fromstring(xml_data)
+    ns = {'atom': 'http://www.w3.org/2005/Atom'}
+    entry = root.find('atom:entry', ns)
+    
+    if entry is None:
+        raise RuntimeError(f"Paper with ID {arxiv_id} not found on arXiv")
+        
+    title = entry.find('atom:title', ns).text.strip().replace('\n', ' ')
+    abstract = entry.find('atom:summary', ns).text.strip().replace('\n', ' ')
+    published_str = entry.find('atom:published', ns).text
+    
+    authors = [author.find('atom:name', ns).text for author in entry.findall('atom:author', ns)]
+    
+    pdf_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+    published = datetime.fromisoformat(published_str.replace("Z", "+00:00"))
+    
+    return ArxivPaperMeta(
+        arxiv_id=arxiv_id,
+        title=title,
+        abstract=abstract,
+        authors=authors,
+        pdf_url=pdf_url,
+        published=published,
+    )
+
 
 def analyze_paper(paper: ArxivPaperMeta) -> PaperSummaryResponse:
     """Download the paper's PDF, run the LangGraph analysis pipeline,

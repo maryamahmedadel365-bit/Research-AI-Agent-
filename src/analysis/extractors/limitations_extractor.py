@@ -20,7 +20,17 @@ class LimitationsExtractor:
 
     def extract(self, sections: Dict[str, str], category_map: Dict[str, List[str]]) -> str:
         headings = category_map.get("limitations", [])
-        content = "\n\n".join(sections.get(h, "") for h in headings).strip()
+        content_parts = []
+        for h in headings:
+            if h in sections:
+                content_parts.append(sections[h])
+            else:
+                for section_h, text in sections.items():
+                    if h.lower() in section_h.lower() or section_h.lower() in h.lower():
+                        content_parts.append(text)
+                        break
+        
+        content = "\n\n".join(content_parts).strip()
 
         if not content:
             # Fallback: scan for likely headings the classifier may have missed.

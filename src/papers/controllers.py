@@ -54,11 +54,17 @@ def analyze_random_paper():
     return result
 
 
+from pydantic import BaseModel
+
+class UrlRequest(BaseModel):
+    url: str
+
 @router.post("/analyze-url", response_model=PaperSummaryResponse)
-def analyze_paper_by_url(paper: ArxivPaperMeta):
-    """Analyze a specific paper (pass its full ArxivPaperMeta as the body)."""
+def analyze_paper_by_url(req: UrlRequest):
+    """Analyze a specific paper from an arXiv URL."""
     try:
-        result = services.analyze_paper(paper)
+        paper_meta = services.fetch_paper_by_url(req.url)
+        result = services.analyze_paper(paper_meta)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis failed: {e}")
     return result

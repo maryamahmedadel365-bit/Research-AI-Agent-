@@ -14,7 +14,9 @@ class HeadingSplitter:
             match = HEADING_PATTERN.match(line)
             if match:
                 sections[current_heading] = "\n".join(current_lines).strip()
-                current_heading = match.group(1).strip()
+                raw_heading = match.group(1).strip()
+                clean_heading = re.sub(r'[*_]', '', raw_heading).strip()
+                current_heading = clean_heading
                 current_lines = []
             else:
                 current_lines.append(line)
