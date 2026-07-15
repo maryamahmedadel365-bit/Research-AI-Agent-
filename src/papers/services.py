@@ -135,7 +135,7 @@ def analyze_paper(paper: ArxivPaperMeta) -> PaperSummaryResponse:
         from ..analysis.state import initial_state
 
         graph = build_graph()
-        result = graph.invoke(initial_state(pdf_path))
+        result = graph.invoke(initial_state(pdf_path, url=paper.pdf_url))
 
         if result.get("errors"):
             raise RuntimeError(f"Pipeline errors: {result['errors']}")

@@ -14,15 +14,19 @@ class NotionPageWriter:
         self.database_id = database_id
 
     def write(self, result: PaperSummary) -> str:
+        properties = {
+            "Title": {"title": [{"text": {"content": result.title}}]},
+            "Methods": {"rich_text": _rich_text(result.methods)},
+            "Experiments": {"rich_text": _rich_text(result.experiments)},
+            "Limitations": {"rich_text": _rich_text(result.limitations)},
+            "Summary": {"rich_text": _rich_text(result.summary)},
+        }
+        if result.url:
+            properties["URL"] = {"url": result.url}
+            
         page = self.client.pages.create(
             parent={"database_id": self.database_id},
-            properties={
-                "Title": {"title": [{"text": {"content": result.title}}]},
-                "Methods": {"rich_text": _rich_text(result.methods)},
-                "Experiments": {"rich_text": _rich_text(result.experiments)},
-                "Limitations": {"rich_text": _rich_text(result.limitations)},
-                "Summary": {"rich_text": _rich_text(result.summary)},
-            },
+            properties=properties,
         )
         return page["id"]  # type: ignore
 
@@ -45,18 +49,14 @@ class NotionPageWriter:
                     return prop["rich_text"][0].get("text", {}).get("content", "")
                 return ""
             
-            # Since Notion only has these fields, we create a dummy PaperSummary 
-            # Note: The frontend expects PaperSummaryResponse which has more fields, 
-            # but we can just fill the available ones.
             paper = PaperSummary(
                 title=get_text("Title"),
                 methods=get_text("Methods"),
                 experiments=get_text("Experiments"),
                 limitations=get_text("Limitations"),
-                summary=get_text("Summary")
+                summary=get_text("Summary"),
+                url=props.get("URL", {}).get("url", None)
             )
-            # We inject the created time as an extra field if possible, but PaperSummary doesn't have it.
-            # We'll just return it as a dict or PaperSummary.
             papers.append(paper)
             
         return papers

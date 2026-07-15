@@ -5,6 +5,7 @@ from typing import Annotated, Dict, List, TypedDict
 class PipelineState(TypedDict, total=False):
 
     pdf_path: str
+    url: str
     
     markdown: str
     
@@ -25,5 +26,5 @@ class PipelineState(TypedDict, total=False):
     errors: Annotated[List[str], operator.add]
 
 
-def initial_state(pdf_path: str) -> PipelineState:
-    return PipelineState(pdf_path=pdf_path, errors=[])
+def initial_state(pdf_path: str, url: str = "") -> PipelineState:
+    return PipelineState(pdf_path=pdf_path, url=url, errors=[])

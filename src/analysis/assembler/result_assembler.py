@@ -9,4 +9,5 @@ class ResultAssembler:
             experiments=fields.get("experiments", ""),
             limitations=fields.get("limitations", ""),
             summary=fields.get("summary", ""),
+            url=fields.get("url", ""),
         )

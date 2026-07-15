@@ -6,3 +6,4 @@ class PaperSummary(BaseModel):
     experiments: str = Field(description="Concise description of experiments run and key results")
     limitations: str = Field(description="Limitations acknowledged or evident in the paper")
     summary: str = Field(description="A 3-5 sentence plain-language summary of the whole paper")
+    url: str | None = Field(default=None, description="The paper's URL")

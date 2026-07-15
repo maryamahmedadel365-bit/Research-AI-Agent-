@@ -9,6 +9,7 @@ def make_assemble_node(assembler):
             "experiments": state.get("experiments", ""),
             "limitations": state.get("limitations", ""),
             "summary": state.get("summary", ""),
+            "url": state.get("url", ""),
         }
         try:
             paper_summary = assembler.assemble(fields)
