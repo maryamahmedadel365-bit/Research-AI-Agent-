@@ -120,4 +120,40 @@ def analyze_paper(paper: ArxivPaperMeta) -> PaperSummaryResponse:
 def get_random_paper_summary() -> PaperSummaryResponse:
     """End-to-end: pick a random paper → analyze → return summary."""
     paper = fetch_random_paper()
-    return analyze_paper(paper)
+    summary = analyze_paper(paper)
+    
+    # Cache the result as the "Daily Paper"
+    try:
+        with open("daily_paper.json", "w") as f:
+            f.write(summary.model_dump_json())
+    except Exception as e:
+        print(f"Failed to cache daily paper: {e}")
+        
+    return summary
+
+
+def get_today_paper() -> PaperSummaryResponse:
+    """Return the cached daily paper, or raise an error if not found."""
+    if not os.path.exists("daily_paper.json"):
+        raise RuntimeError("No daily paper has been processed yet today. The daily job must run first.")
+    
+    with open("daily_paper.json", "r") as f:
+        data = json.load(f)
+        return PaperSummaryResponse(**data)
+
+
+def get_all_papers_from_notion() -> list[dict]:
+    """Retrieve the last 50 papers stored in Notion."""
+    import os
+    from ..analysis.sinks.notion_sink import NotionPageWriter
+    
+    NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
+    NOTION_DATABASE_ID = os.environ.get("NOTION_DATABASE_ID")
+    
+    if not NOTION_TOKEN or not NOTION_DATABASE_ID:
+        raise RuntimeError("Notion configuration missing from environment variables")
+        
+    writer = NotionPageWriter(NOTION_TOKEN, NOTION_DATABASE_ID)
+    papers = writer.get_all_papers()
+    
+    return [p.model_dump() for p in papers]

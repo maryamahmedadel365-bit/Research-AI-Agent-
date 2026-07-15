@@ -34,11 +34,21 @@ async def lifespan(app: FastAPI):
     stop_scheduler()
 
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(
     title="Research AI Agent",
     description="Research AI Agent",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

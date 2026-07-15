@@ -15,6 +15,25 @@ def verify_cron_secret(secret: str = ""):
         raise HTTPException(status_code=403, detail="Invalid cron secret")
 
 
+@router.get("/today", response_model=PaperSummaryResponse)
+def get_today_paper():
+    """Fetch the cached daily paper that was saved to Notion today."""
+    try:
+        paper = services.get_today_paper()
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return paper
+
+
+@router.get("/all", response_model=list[PaperSummaryResponse])
+def get_all_papers():
+    """Fetch all papers stored in Notion (limit 50)."""
+    try:
+        papers = services.get_all_papers_from_notion()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return papers
+
 @router.get("/random", response_model=ArxivPaperMeta)
 def get_random_paper():
     """Fetch a random recent AI paper from arXiv (metadata only, no analysis)."""
